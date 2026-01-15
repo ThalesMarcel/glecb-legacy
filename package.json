@@ -1,6 +1,6 @@
 {
   "name": "glecb",
-  "version": "1.0.5",
+  "version": "1.0.7",
   "description": "Gerador de listas de estados e cidades em formato JSON, a partir da API de localidades do IBGE, sem o excesso de dados existente nos retornos da API.",
   "main": "index.js",
   "type": "module",
