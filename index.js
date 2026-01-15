@@ -14,6 +14,7 @@
  * v1.0.4 - 22/07/2023 - atualização de segurança das dependências
  * v1.0.5 - 17/10/2023 - atualização de segurança das dependências
  * v1.0.6 - 19/11/2024 - atualização de segurança das dependências
+ * v1.0.7 - 14/01/2026 - atualização de segurança das dependências
  *
  *  Gerador de listas de estados e cidades em formato JSON, a partir da API de
  * localidades do IBGE, sem o excesso de dados existente nos retornos da API.
