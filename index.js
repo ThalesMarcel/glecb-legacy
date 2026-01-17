@@ -1,106 +1,70 @@
 /**
- *  GLECB - Gerador de Listas de Estados e Cidades Brasileiras
+ * GLECB — Gerador de Listas de Estados e Cidades Brasileiras
  *
- *  Versão: 1.0.6
- *  Autor: Thales Marcel Souza Silva
- *  Data: 19/11/2024
+ * Versão: 1.1.0
+ * Autor: Thales Marcel Souza Silva
  *
- * CHANGELOG
+ * Gera arquivos JSON contendo listas atualizadas dos estados e cidades do
+ * Brasil a partir da API de localidades do IBGE, removendo dados
+ * desnecessários presentes nos retornos padrão da API.
  *
- * v1.0.0 - 15/08/2021 - versão inicial
- * v1.0.1 - 30/06/2022 - atualização de segurança das dependências
- * v1.0.2 - 07/06/2023 - atualização de segurança das dependências
- * v1.0.3 - 29/06/2023 - atualização de segurança das dependências
- * v1.0.4 - 22/07/2023 - atualização de segurança das dependências
- * v1.0.5 - 17/10/2023 - atualização de segurança das dependências
- * v1.0.6 - 19/11/2024 - atualização de segurança das dependências
- * v1.0.7 - 14/01/2026 - atualização de segurança das dependências
- *
- *  Gerador de listas de estados e cidades em formato JSON, a partir da API de
- * localidades do IBGE, sem o excesso de dados existente nos retornos da API.
- *
- *  Programa escrito em Node.js v16.
+ * Compatível com Node.js >= 10.12.0 (CommonJS).
  */
 
 /*************************** Importação de Módulos ****************************/
 
-/** manipulador de arquivos */
-import * as fs from 'fs';
-/** um módulo leve que traz o método "window.fetch" para Node.js */
-import fetch from 'node-fetch';
-
-/******************************************************************************/
-
-/************************** Declaração de Variáveis ***************************/
-
-/** URL do JSON a ser baixado */
-let url;
-
-/** Recebe os dados brutos obtidos pela função "fetch" */
-let resposta;
-
-/** Vetor de estados */
-let estados;
-
-/** Vetor temporário de cidades */
-let _cidades;
+/** Manipulador de arquivos */
+const fs = require('fs').promises;
 
 /**
- *  Matriz de cidades, formado pela concatenação dos dados obtidos do vetor
- * "_cidades", nas iterações do bloco de laço
+ *  Um módulo leve que traz o método "window.fetch" para versões do Node.js que
+ * ainda não o possuem nativamente.
 */
-let cidades = [];
-
-/** Chaves do JSON original a serem copiadas para o JSON final */
-let chaves;
-
-/** Armazena dados em formato de string JSON */
-let str_json;
-
-/** Manipulador de arquivos */
-let arquivo;
+const fetch = require('node-fetch');
 
 /******************************************************************************/
 
-/****************** Importar os dados referentes aos estados ******************/
 
-url = 'https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome';
-console.log('Obtendo a lista de estados do Brasil...');
-resposta = await fetch(url);
-estados = await resposta.json();
-chaves = ['nome', 'sigla'];
-str_json = JSON.stringify(estados, chaves);
-console.log('Armazenando a lista de estados no arquivo "estados.json"...');
-arquivo = fs.openSync('./json/estados.json', 'w+');
-fs.writeFileSync(arquivo, str_json);
-fs.closeSync(arquivo);
+async function gerarListas() {
+  try {
+    /**
+     * Verifica se o diretório "json" existe no diretório da aplicação.
+     * Caso ainda não exista, ele é criado.
+     */
+    await fs.mkdir('./json', { recursive: true });
 
-/******************************************************************************/
+    let respostaAPI = await fetch('https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome');
 
-/****************** Importar os dados referentes às cidades *******************/
+    const estados = await respostaAPI.json();
 
-/* Formação da matriz "cidades" */
-for (let i = 0; i < estados.length; i++) {
-  console.log('Estado: ' + estados[i]['nome'] + '. Obtendo a lista de cidades...');
+    await fs.writeFile('./json/estados.json', JSON.stringify(estados, ['nome', 'sigla']));
 
-  url = 'https://servicodados.ibge.gov.br/api/v1/localidades/estados/' + estados[i]['id'].toString() + '/municipios?orderBy=nome';
+    const matrizCidades = [];
 
-  resposta = await fetch(url);
-  _cidades = await resposta.json();
+    /**
+     *  O laço faz com que cada "linha" de matrizCidades contenha as cidades de um
+     * estado brasileiro.
+    */
+    for (let i = 0; i < estados.length; i++) {
+      console.log('Obtendo cidades do estado: ' + estados[i].nome);
 
-  /* Adição de um novo vetor à matriz "cidades" */
-  cidades.push(new Array());
+      respostaAPI = await fetch('https://servicodados.ibge.gov.br/api/v1/localidades/estados/' + estados[i].id + '/municipios?orderBy=nome');
 
-  /* Concatenação do vetor de cidades do estado "i" na matriz "cidades" */
-  for (let j = 0; j < _cidades.length; j++) {
-    cidades[i].push(_cidades[j]['nome']);
+      const dadosCidades = await respostaAPI.json();
+
+      matrizCidades.push(dadosCidades.map(function(cidade) { return cidade.nome; }));
+    }
+
+    await fs.writeFile('./json/cidades.json', JSON.stringify(matrizCidades));
+
+    console.log('🆗 Arquivos gerados com sucesso (v1.1 Legacy)!');
+  } catch (err) {
+    console.error('🆘 Erro:', err.message);
   }
 }
 
-/* Armazenamento do conteúdo de "cidades" no arquivo "cidades.json" */
-str_json = JSON.stringify(cidades);
-console.log('Armazenando a lista de cidades no arquivo "cidades.json"...');
-arquivo = fs.openSync('./json/cidades.json', 'w+');
-fs.writeFileSync(arquivo, str_json);
-fs.closeSync(arquivo);
-console.log('Armazenamento finalizado!!!');
+module.exports = { gerarListas };
+
+if (require.main === module) {
+  gerarListas();
+}

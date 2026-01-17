@@ -1,22 +1,18 @@
 {
-  "name": "glecb",
-  "version": "1.0.7",
-  "description": "Gerador de listas de estados e cidades em formato JSON, a partir da API de localidades do IBGE, sem o excesso de dados existente nos retornos da API.",
+  "name": "glecb-legacy",
+  "version": "1.1.0",
+  "description": "Gerador de Listas de Estados e Cidades Brasileiras (Versão Legacy - para Node.js antigo).",
   "main": "index.js",
-  "type": "module",
+  "engines": {
+    "node": ">=10.12.0"
+  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/ThalesMarcel/glecb.git"
+    "url": "https://github.com/ThalesMarcel/glecb-legacy.git"
   },
-  "homepage": "https://github.com/ThalesMarcel/glecb",
   "author": "Thales Marcel Souza Silva",
   "license": "MIT",
   "dependencies": {
     "node-fetch": "^2.6.7"
-  },
-  "devDependencies": {
-    "babel-eslint": "^10.1.0",
-    "eslint": "^7.32.0"
-  },
-  "packageManager": "yarn@4.5.1"
+  }
 }
