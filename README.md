@@ -1,6 +1,6 @@
 # GLECB — Gerador de Listas de Estados e Cidades Brasileiras (versão Legacy)
 
-O GLECB é uma ferramenta para **geração automática de arquivos JSON** contendo as listas de estados e de cidades do Brasil.
+O GLECB é uma ferramenta para **geração automática de arquivos JSON** contendo as listas de estados e cidades do Brasil.
 Os dados são obtidos diretamente da **API de localidades do IBGE**, de forma otimizada, garantindo informações atualizadas e confiáveis.
 
 ## ✨ Características
@@ -14,7 +14,7 @@ Os dados são obtidos diretamente da **API de localidades do IBGE**, de forma ot
 - [Node.js](https://nodejs.org/en) >= 10.12.0
 - [node-fetch](https://classic.yarnpkg.com/en/package/node-fetch) >= 2.6.7
 
-> **Nota:** se você utiliza o **Node.js v20 ou superior**, recomenda-se usar a [versão 2.0 do GLECB](https://github.com/ThalesMarcel/glecb), que segue os padrões mais modernos do ecossistema JavaScript.
+> **Nota:** caso a aplicação seja feita em **Node.js v20 ou superior**, recomenda-se o uso da [versão 2.0 do GLECB](https://github.com/ThalesMarcel/glecb), que segue os padrões mais modernos do ecossistema JavaScript.
 
 ## 🚀 Como usar
 
@@ -24,7 +24,7 @@ Clone o repositório:
 git clone https://github.com/ThalesMarcel/glecb-legacy.git
 ```
 
-### Execução **direta** do gerador
+### Execução direta
 
 Execute o script principal para gerar os arquivos JSON:
 
@@ -32,9 +32,9 @@ Execute o script principal para gerar os arquivos JSON:
 node index.js
 ```
 
-### Execução **como módulo** em outra aplicação
+### Execução como módulo
 
-Você também pode utilizar o GLECB como dependência em outro projeto:
+Também pode-se utilizar o GLECB como dependência em outro projeto:
 
 ```javascript
 const { gerarListas } = require('glecb-legacy');
