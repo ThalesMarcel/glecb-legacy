@@ -34,10 +34,10 @@ node index.js
 
 ### Execução como módulo
 
-Também pode-se utilizar o GLECB como dependência em outro projeto:
+O GLECB também pode ser utilizado como dependência em outro projeto, por meio de importação local:
 
 ```javascript
-const { gerarListas } = require('glecb-legacy');
+const { gerarListas } = require('../glecb-legacy/index.js');
 
 async function iniciar() {
   await gerarListas();
